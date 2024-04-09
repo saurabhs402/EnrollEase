@@ -1,11 +1,10 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Response
 
-from models.model import Student
-
-from config.db import studentsCollection
-from typing import Optional, List
-
+from models.model import Student, CreateResponse,listStudentResponse, EmptyResponse
 from schemas.schema import individual_serial,list_serial
+from config.db import studentsCollection
+
+from typing import Optional, List
 from bson import ObjectId
 
 endPoints=APIRouter()
@@ -19,12 +18,14 @@ endPoints=APIRouter()
 #         "age":age
 #     }
 
-@endPoints.post("/students",status_code=201)
+# Create Students
+@endPoints.post("/students",status_code=201,response_model=CreateResponse)
 async def Create_student(student:Student):
     _id=studentsCollection.insert_one(dict(student))
     return  {"_id":str(_id.inserted_id)}
 
-@endPoints.get("/students",status_code=200)
+#  Retrieve Students
+@endPoints.get("/students",status_code=200,response_model=listStudentResponse)
 async def list_students(country: Optional[str] = None, age: Optional[int] = None):
     query = {}
 
@@ -40,24 +41,27 @@ async def list_students(country: Optional[str] = None, age: Optional[int] = None
     return students
 
 
-
-
-@endPoints.get("/students/{id}",status_code=200)
+# Fetch Particular Student
+@endPoints.get("/students/{id}",status_code=200,response_model=Student)
 async def Fetch_student(id:str):
     student= individual_serial(studentsCollection.find_one({"_id":ObjectId(id)}))
     return student
 
 
-
-
+# Update Student
 @endPoints.patch("/students/{id}",status_code=204)
 async def Update_student(id:str,student:dict):
     studentsCollection.find_one_and_update({"_id":ObjectId(id)},{
         "$set":dict(student)
     })
+    return Response(status_code=204, content_type="text/plain", content="")
+    
+    
 
-@endPoints.delete("/students/{id}",status_code=200)
+# Delete STudent
+@endPoints.delete("/students/{id}",status_code=200,response_model=EmptyResponse)
 async def Delete_student(id:str):
     studentsCollection.find_one_and_delete({"_id":ObjectId(id)})
+    
   
   
