@@ -64,7 +64,7 @@ async def Fetch_student(id:str):
 
 # Update Student
 @endPoints.patch("/students/{id}",status_code=204)
-async def Update_student(id: str, updated_fields:Student):
+async def Update_student(id: str, student:Student):
    
 
     # Convert Pydantic model to dictionary excluding None values
