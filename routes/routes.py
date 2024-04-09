@@ -13,9 +13,7 @@ endPoints=APIRouter()
 def home():
     return{
         "status":"ok",
-        "message":"My fastapi is running.Please mention the endpoints such as /students or /docs",
-        "country":country,
-        "age":age
+        "message":"My fastapi is running.Please mention the endpoints such as /students or /docs"
     }
 
 # Create Students
