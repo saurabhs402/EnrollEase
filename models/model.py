@@ -2,15 +2,20 @@ from pydantic import BaseModel, Field, validator
 from fastapi import HTTPException
 from typing import List
 
+class Address(BaseModel):
+    city: str
+    country: str
+
 class Student(BaseModel):
     name:str
     age:int
-    address:dict = Field(..., example={"city": "string", "country": "string"})
+    address:Address
+     
 
     @validator('name')
     def name_must_not_be_empty(cls, name):
         if not name.strip():
-            HTTPException(status_code=400, detail='Name must not be empty')
+            raise HTTPException(status_code=400, detail='Name must not be empty')
         return name
 
     @validator('age')
@@ -21,7 +26,7 @@ class Student(BaseModel):
 
     @validator('address')
     def address_must_not_be_empty(cls, add):
-        if not add or len(add) == 0:
+        if not add.city.strip() or not add.country.strip():
             raise HTTPException(status_code=400, detail='Address must not be empty')
         return add
 
