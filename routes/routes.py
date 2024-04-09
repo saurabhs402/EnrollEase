@@ -9,14 +9,14 @@ from bson import ObjectId
 
 endPoints=APIRouter()
 
-# @endPoints.get("/")
-# def home(country:str=None,age:int=0):
-#     return{
-#         "status":"ok",
-#         "message":"My fastapi is running.Please mention the endpoints.",
-#         "country":country,
-#         "age":age
-#     }
+@endPoints.get("/")
+def home(country:str=None,age:int=0):
+    return{
+        "status":"ok",
+        "message":"My fastapi is running.Please mention the endpoints such as /students or /docs",
+        "country":country,
+        "age":age
+    }
 
 # Create Students
 @endPoints.post("/students",status_code=201,response_model=CreateResponse)
